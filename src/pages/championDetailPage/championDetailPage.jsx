@@ -1,0 +1,105 @@
+import { useEffect } from "react";
+import Navbar from "../../components/navbar/navbar";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { FaRegStar, FaStar } from 'react-icons/fa';
+import { handleFavChamp } from "../../app/features/counterSlice";
+import { useParams } from "react-router-dom";
+import './championDetailPage.css'
+import { CgCarousel } from "react-icons/cg";
+import LoadingRoll from "../../components/LoadingRoll/LoadingRoll";
+
+function ChampionDetailPage() {
+    
+    const [data, setData] = useState(null);
+    const [done, setDone] = useState(false);
+    const myData = useSelector((state)=>state.counter)
+    const dispatch = useDispatch()
+    const {championName} = useParams()
+
+    function handleFav() {
+        dispatch(handleFavChamp(data[0].id))
+        console.log(myData.favChamp);
+    }
+    function isInFav() {
+        let result = false
+        myData.favChamp.forEach(champ => {
+            if (champ == data[0].id) {
+                result = true
+            }
+        });
+        return result
+    }
+
+    useEffect(() => {
+        const fetchData = async () => {
+        try {
+            
+            await fetch(`http://ddragon.leagueoflegends.com/cdn/13.17.1/data/fr_FR/champion/${championName}.json`)
+            .then((response) => response.json())
+            .then((jsonData) => {
+                const championData = Object.values(jsonData.data); // Extract the array of champions
+                setData(championData);
+            })
+
+        } catch (error) {
+            console.error(error);
+        }
+        };
+        
+        fetchData();
+
+    }, [championName]);
+    console.log(data);
+    return (
+        <div className="mainPage">
+            <Navbar myData={myData}/>
+            {
+                data ?
+                <>
+                <div className="headerMargin"></div>
+                <section className="headerChampion">
+                    <div className="championName">
+                        <h1 >{data[0].name}</h1>
+                        <h2>{data[0].title}</h2>
+                        
+                    </div>
+                    {
+                            isInFav() ?
+                            <FaStar onClick={()=>{handleFav()}} className='sF'/>:
+                            <FaRegStar onClick={()=>{handleFav()}} className='s'/>
+                    }
+                    <img src={`https://ddragon.leagueoflegends.com/cdn/img/champion/splash/${data[0].id}_0.jpg`}/>
+                </section>
+                <section className="loreSection">
+                    <h1>Lore</h1>
+                    <h3>{data[0].lore}</h3>
+                </section>
+                <section>
+                    <h1 className="bg-danger">SKIN</h1>
+                    <div className="allSkin">
+                        {
+                            data[0].skins.map((skin, index)=>{
+                                return (
+                                    <div className="skin">
+                                        <span>{skin.name}</span>
+                                        <img  src={`https://ddragon.leagueoflegends.com/cdn/img/champion/splash/${data[0].id}_${skin.num}.jpg`}/>
+                                    </div>
+                                )
+                            })
+                        }
+                    </div>
+                </section>
+                
+                </>
+                
+                :
+                <LoadingRoll/>
+            }
+            
+            
+        </div>
+    )
+}
+
+export default ChampionDetailPage
