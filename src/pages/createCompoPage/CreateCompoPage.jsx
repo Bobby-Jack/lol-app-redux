@@ -44,7 +44,7 @@ function CreateCompoPage() {
 
     useEffect(() => {
         const fetchData = async () => {
-            await fetch('http://ddragon.leagueoflegends.com/cdn/13.17.1/data/fr_FR/champion.json')
+            await fetch('http://ddragon.leagueoflegends.com/cdn/13.24.1/data/fr_FR/champion.json')
             .then((response) => response.json())
             .then((jsonData) => {
             const championData = Object.values(jsonData.data); // Extract the array of champions
@@ -52,7 +52,7 @@ function CreateCompoPage() {
             })
             .catch((error) => console.error(error))
 
-            await fetch('https://ddragon.leagueoflegends.com/cdn/13.17.1/data/fr_FR/runesReforged.json')
+            await fetch('https://ddragon.leagueoflegends.com/cdn/13.24.1/data/fr_FR/runesReforged.json')
             .then((response) => response.json())
             .then((jsonData) => {
             const d = Object.values(jsonData); // Extract the array of champions
@@ -72,6 +72,10 @@ function CreateCompoPage() {
     function updateCompoChamp() {
         let d = document.querySelector('.compoChampInput').value.toLowerCase()
         setCompoChamp(d)
+    }
+
+    function changeChamp(name) {
+        document.querySelector('.compoChampInput').value = name
     }
 
     function isValid() {
@@ -123,6 +127,23 @@ function CreateCompoPage() {
                 }} placeholder='Entrez le nom de la composition'/>
                 <input onChange={()=>{updateCompoChamp()}} className='compoChampInput' type='text' placeholder='Choisissez un champion'/>
                 
+                {
+                    data ?
+                    <>
+                    <div className='allchampionsSelect'>
+                        {
+                            data.map((champion, index)=>{
+                                return <div key={index} className='championSelect'>
+
+                                            <img onClick={()=>{changeChamp(champion.id)}} src={`http://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/${champion.id}.png`} />
+                                </div>
+                            })
+                        }
+                    </div>
+                    </>
+                    :
+                    <span>Chargment des champions</span>
+                }
                 <h2>Rune primaire</h2>
                 <div className='runeList'>
                     {
@@ -169,7 +190,6 @@ function CreateCompoPage() {
                         <span>Chargement des runes</span>
                     }
                 </div>
-                <h1>{prim}+{sec}</h1>
                 <button className='validateBtn' onClick={()=>{validate()}}>validate</button>
             </div>
         </div>

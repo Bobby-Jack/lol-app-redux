@@ -13,7 +13,7 @@ function ItemPage() {
 	const dispatch = useDispatch()
 
     useEffect(() =>{
-        fetch('http://ddragon.leagueoflegends.com/cdn/13.17.1/data/fr_FR/champion.json')
+        fetch('http://ddragon.leagueoflegends.com/cdn/13.24.1/data/fr_FR/champion.json')
         .then((response) => response.json())
         .then((jsonData) => {
         const championData = Object.values(jsonData.data); // Extract the array of champions
@@ -21,7 +21,7 @@ function ItemPage() {
         })
         .catch((error) => console.error(error))
 
-        fetch('https://ddragon.leagueoflegends.com/cdn/13.17.1/data/fr_FR/item.json')
+        fetch('https://ddragon.leagueoflegends.com/cdn/13.24.1/data/fr_FR/item.json')
         .then((response) => response.json())
         .then((jsonData) => {
         const items = Object.values(jsonData.data); // Extract the array of champions

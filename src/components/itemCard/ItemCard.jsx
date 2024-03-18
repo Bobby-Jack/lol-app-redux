@@ -8,7 +8,7 @@ function ItemCard({item}) {
 
     return (
         <div className='itemCard'>
-            <img src={`http://ddragon.leagueoflegends.com/cdn/13.17.1/img/item/${item.image.full}`}/>
+            <img src={`http://ddragon.leagueoflegends.com/cdn/13.24.1/img/item/${item.image.full}`}/>
             <span>{item.name}</span>
         </div>
     )

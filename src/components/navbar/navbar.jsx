@@ -34,7 +34,7 @@ function Navbar({myData}) {
                 {
                     myData.favChamp.map((championId, index)=>{
                         return <div key={index} className='favChampion'>
-                            <img src={`http://ddragon.leagueoflegends.com/cdn/13.17.1/img/champion/${championId}.png`} />
+                            <img src={`http://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/${championId}.png`} />
                             {championId}
                             <FaTrash className='removeFav' onClick={()=>{handleFav(championId)}}/>
                         </div>

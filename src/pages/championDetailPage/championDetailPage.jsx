@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import Navbar from "../../components/navbar/navbar";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { FaRegStar, FaStar } from 'react-icons/fa';
+import { FaRegStar, FaStar, FaExpandAlt , FaCompress, FaTimes  } from 'react-icons/fa';
 import { handleFavChamp } from "../../app/features/counterSlice";
 import { useParams } from "react-router-dom";
 import './championDetailPage.css'
@@ -12,10 +12,17 @@ import LoadingRoll from "../../components/LoadingRoll/LoadingRoll";
 function ChampionDetailPage() {
     
     const [data, setData] = useState(null);
+    const [selectedSkin, setSelectedSkin] = useState()
+    const [skinInspector, setSkinInspector] = useState(false)
     const [done, setDone] = useState(false);
     const myData = useSelector((state)=>state.counter)
     const dispatch = useDispatch()
     const {championName} = useParams()
+
+    function showInspector(skin) {
+        setSelectedSkin(skin)
+        setSkinInspector(true)
+    }
 
     function handleFav() {
         dispatch(handleFavChamp(data[0].id))
@@ -35,7 +42,7 @@ function ChampionDetailPage() {
         const fetchData = async () => {
         try {
             
-            await fetch(`http://ddragon.leagueoflegends.com/cdn/13.17.1/data/fr_FR/champion/${championName}.json`)
+            await fetch(`http://ddragon.leagueoflegends.com/cdn/13.24.1/data/fr_FR/champion/${championName}.json`)
             .then((response) => response.json())
             .then((jsonData) => {
                 const championData = Object.values(jsonData.data); // Extract the array of champions
@@ -52,7 +59,22 @@ function ChampionDetailPage() {
     }, [championName]);
     console.log(data);
     return (
-        <div className="mainPage">
+        <>
+            <section className= {skinInspector ? "skinField" : "skinField hide"} >
+                <div className="leaveBtn" onClick={()=>{setSelectedSkin(null); setSkinInspector(false)}}>
+                    <FaTimes />
+                </div>
+                {
+                    selectedSkin ?
+                    <>
+                    <img src={`https://ddragon.leagueoflegends.com/cdn/img/champion/splash/${data[0].id}_${selectedSkin.num}.jpg`}/>
+                    <h1>{selectedSkin.name}</h1>
+                    </>
+                    :
+                    ''
+                }
+            </section>
+            <div className="mainPage">
             <Navbar myData={myData}/>
             {
                 data ?
@@ -81,9 +103,10 @@ function ChampionDetailPage() {
                         {
                             data[0].skins.map((skin, index)=>{
                                 return (
-                                    <div className="skin">
+                                    <div className="skin" onClick={()=>{showInspector(skin)}}>
+                                        <FaExpandAlt  className="zoom"/>
                                         <span>{skin.name}</span>
-                                        <img  src={`https://ddragon.leagueoflegends.com/cdn/img/champion/splash/${data[0].id}_${skin.num}.jpg`}/>
+                                        <img src={`https://ddragon.leagueoflegends.com/cdn/img/champion/splash/${data[0].id}_${skin.num}.jpg`}/>
                                     </div>
                                 )
                             })
@@ -99,6 +122,7 @@ function ChampionDetailPage() {
             
             
         </div>
+        </>
     )
 }
 

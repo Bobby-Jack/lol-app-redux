@@ -6,7 +6,7 @@ function CompoCard({data, editMode}) {
             <h3>{data.name}</h3>
             <div className='compoCardHeader'>
                 <div className='compoCardChamp'>
-                    <img src={`http://ddragon.leagueoflegends.com/cdn/13.17.1/img/champion/${data.champion}.png`} />
+                    <img src={`http://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/${data.champion}.png`} />
                 </div>
                 <div className='compoCardRune'>
                     {

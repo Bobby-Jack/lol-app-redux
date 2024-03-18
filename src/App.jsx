@@ -9,10 +9,15 @@ import { useDispatch } from 'react-redux'
 import { incremment } from './app/features/counterSlice'
 import Navbar from './components/navbar/navbar'
 import { useNavigate } from 'react-router-dom'
+import { FaSearch } from "react-icons/fa";
+
+
 function App() {
   const myData = useSelector((state)=>state.counter)
 	const dispatch = useDispatch()
   const [data, setData] = useState([]);
+  const [filter, setfilter] = useState("");
+  const [activeSearch, setActiveSearch] = useState(false)
   const navigate = useNavigate()
 
   function isInFav(id) {
@@ -24,10 +29,12 @@ function App() {
     return false
   }
 
+  
+
 
 
   useEffect(() =>{
-    fetch('http://ddragon.leagueoflegends.com/cdn/13.17.1/data/fr_FR/champion.json')
+    fetch('http://ddragon.leagueoflegends.com/cdn/13.24.1/data/fr_FR/champion.json')
     .then((response) => response.json())
     .then((jsonData) => {
       const championData = Object.values(jsonData.data); // Extract the array of champions
@@ -39,11 +46,16 @@ function App() {
   console.log(data);
   return (
     <div className='mainPage'>
-
+        <h1>{filter}</h1>
+        <input type='text' onChange={(e)=>{setfilter(e.target.value.toLowerCase())}} className={activeSearch ? 'inputSearch active' : 'inputSearch'}/>
+        <div className="searchBtn" onClick={()=>{setActiveSearch(!activeSearch)}}>
+          <FaSearch />
+        </div>
         <Navbar data={data} myData={myData}/>
         <div className='allChampion'>
             {
               data.map((champion, index) => {
+                if(champion.id.toLowerCase().includes(filter))
                 return <ChampionCard key={index} championData={champion} fav={isInFav(champion.id)}/>
               })
             }
